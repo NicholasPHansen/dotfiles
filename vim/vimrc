@@ -1,0 +1,183 @@
+set nocompatible              " be iMproved, required
+filetype off                  " required
+" Check if 256 color mode is enabled, if not, enable it
+if $COLORTERM == 'gnome-terminal'
+	  set t_Co=256
+  endif
+" line numbers
+set number
+" line wrapping
+"set nowrap
+" Enable syntax highlighting
+syntax enable
+" Python specific settings
+set autoindent
+set tabstop=4
+set expandtab
+set shiftwidth=4
+filetype indent on 
+
+" Solarized these settings
+set background=dark
+let g:solarized_termcolors=256
+colorscheme solarized
+
+" Set backspace over everything else in insert mode
+set backspace=indent,eol,start " backspace over everything in insert mode
+
+" Download vim-plug if not present
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+" Specify a directory for plugins
+call plug#begin('~/.vim/plugged')
+
+" Multiple Plug commands can be written in a single line using | separators
+Plug 'SirVer/ultisnips'
+" Snippets
+Plug 'honza/vim-snippets'
+" Solarized colorscheme
+Plug 'altercation/vim-colors-solarized'
+" Status line plugin
+Plug 'bling/vim-airline'
+" File finder
+Plug 'kien/ctrlp.vim'
+" NERDTree
+Plug 'scrooloose/nerdtree'
+" Youcompleteme autocomplete
+Plug 'Valloric/YouCompleteMe'
+" Syntax checker
+Plug 'scrooloose/syntastic'
+
+" Initialize plugin system
+call plug#end()
+
+" Ultisnip config
+let g:UltiSnipsExpandTrigger="<C-j>"
+let g:UltiSnipsJumpForwardTrigger="<C-b>"
+let g:UltiSnipsJumpBackwardTrigger="<C-z>"
+
+
+" YCM Config
+" Set the configuration file for ycm for C-family languages
+let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
+
+"set nocompatible              " be iMproved, required
+"filetype off                  " required
+"
+""set the runtime path to include Vundle and initialize
+"set rtp+=~/.vim/bundle/Vundle.vim
+"call vundle#begin()
+"" alternatively, pass a path where Vundle should install plugins
+""call vundle#begin('~/some/path/here')
+"
+"" let Vundle manage Vundle, required
+"Bundle 'gmarik/Vundle.vim'
+"
+"" The following are examples of different formats supported.
+"" Keep Plugin commands between vundle#begin/end.
+"" plugin on GitHub repo
+"Bundle 'tpope/vim-fugitive'
+"" Solarized colorscheme
+"Bundle 'altercation/vim-colors-solarized'
+"" Syntax checker
+"Bundle 'scrooloose/syntastic'
+"" Snipppets plugin for faster code generation
+"Bundle 'SirVer/ultisnips'
+"" Snips
+"Bundle 'honza/vim-snippets'
+"" Youcompleteme autocomplete
+"Bundle 'Valloric/YouCompleteMe'
+"" NERDTree
+"Bundle 'scrooloose/nerdtree'
+"" Vim latex plugin
+"Bundle 'lervag/vim-latex'
+"" Status line plugin
+"Bundle 'bling/vim-airline'
+"" File finder
+"Bundle 'kien/ctrlp.vim'
+"" Tag list handler
+"Bundle 'vim-scripts/taglist.vim'
+"
+"" Colorscheme plugin
+"Bundle 'flazz/vim-colorschemes'
+"
+"" All of your Plugins must be added before the following line
+"call vundle#end()            " required
+"filetype plugin indent on    " required
+"" To ignore plugin indent changes, instead use:
+""filetype plugin on
+""
+"" Brief help
+"" :PluginList          - list configured plugins
+"" :PluginInstall(!)    - install (update) plugins
+"" :PluginSearch(!) foo - search (or refresh cache first) for foo
+"" :PluginClean(!)      - confirm (or auto-approve) removal of unused plugins
+""
+"" see :h vundle for more details or wiki for FAQ
+"" Put your non-Plugin stuff after this line
+"
+"
+"" Ultisnip config
+"let g:UltiSnipsExpandTrigger="<C-j>"
+"let g:UltiSnipsJumpForwardTrigger="<C-b>"
+"let g:UltiSnipsJumpBackwardTrigger="<C-z>"
+"
+"map <S-D> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+"map <S-F> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
+"nnoremap t <C-]>
+"nnoremap T <C-T>
+"
+"" Check if 256 color mode is enabled, if not, enable it
+"if $COLORTERM == 'gnome-terminal'
+"	  set t_Co=256
+"  endif
+"" line numbers
+"set number
+"" line wrapping
+""set nowrap
+"" Enable syntax highlighting
+"syntax enable
+"" Python specific settings
+"set autoindent
+"set tabstop=4
+"set expandtab
+"set shiftwidth=4
+"filetype indent on 
+"
+"" Solarized these settings
+"set background=dark
+"let g:solarized_termcolors=256
+"colorscheme solarized
+"
+"" Mark cursor line and column
+"set nocursorline
+"set nocursorcolumn
+"syntax sync minlines=256"
+"" Speed up vim 
+"set re=1
+"
+"" Set backspace over everything else in insert mode
+"set backspace=indent,eol,start " backspace over everything in insert mode
+"
+"" YCM Config
+"" Set the configuration file for ycm for C-family languages
+"let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
+"
+"" Disable YCM tab completion, use <C-N> and <C-P>
+"let g:ycm_key_list_select_completion=[]
+"let g:ycm_key_list_previous_completion=[]
+"
+"" set remap for Clangformmater
+"let g:clang_format#style_options = {
+"            \ "AccessModifierOffset" : -4,
+"            \ "AllowShortIfStatementsOnASingleLine" : "true",
+"            \ "AlwaysBreakTemplateDeclarations" : "true",
+"            \ "Standard" : "C++11"}
+"
+"" map to <Leader>cf in C++ code
+"autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
+"autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
