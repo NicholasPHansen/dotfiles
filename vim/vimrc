@@ -1,3 +1,22 @@
+call plug#begin()
+Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-fugitive'
+Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'scrooloose/syntastic'
+Plug 'SirVer/ultisnips'
+Plug 'bling/vim-airline'
+Plug 'honza/vim-snippets'
+Plug 'kien/ctrlp.vim'
+Plug 'ycm-core/YouCompleteMe', { 'do': './install.py' }
+Plug 'ervandew/supertab'
+" On-demand loading
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+call plug#end()
+
+" Installed from the plugins
+colorscheme dracula
+
+set encoding=utf-8
 " line numbers
 set number relativenumber
 set nu rnu
@@ -5,13 +24,20 @@ set nu rnu
 set cursorline
 syntax enable
 
-" Installed from the plugins
-colorscheme dracula
-
 " Check if 256 color mode is enabled, if not, enable it
 if $COLORTERM == 'gnome-terminal'
 	  set t_Co=256
 endif
+
+
+" Python specific settings
+set autoindent
+set tabstop=4
+set expandtab
+set shiftwidth=4
+filetype indent on 
+
+
 
 " Automatically open NERDTree when opening vim
 autocmd VimEnter * NERDTree
@@ -31,27 +57,3 @@ let g:SuperTabDefaultCompletionType = '<C-n>'
 let g:UltiSnipsExpandTrigger = "<tab>"
 let g:UltiSnipsJumpForwardTrigger = "<tab>"
 let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
-
-" Python specific settings
-set autoindent
-set tabstop=4
-set expandtab
-set shiftwidth=4
-filetype indent on 
-
-
-call plug#begin()
-Plug 'tpope/vim-sensible'
-Plug 'tpope/vim-fugitive'
-Plug 'dracula/vim', { 'as': 'dracula' }
-Plug 'scrooloose/syntastic'
-Plug 'SirVer/ultisnips'
-Plug 'bling/vim-airline'
-Plug 'honza/vim-snippets'
-Plug 'kien/ctrlp.vim'
-Plug 'ycm-core/YouCompleteMe', { 'do': './install.py' }
-Plug 'ervandew/supertab'
-" On-demand loading
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-call plug#end()
-
