@@ -87,28 +87,30 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
-# User configuration
+##########################
+####### USER CONFIG ######
+##########################
 
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# Vagrant setup
-export VAGRANT_DEFAULT_PROVIDER=virtualbox
+# Add doomemacs binaries to path
+export PATH=~/.emacs.d/bin:$PATH
 
 
-# Virtualenvwrapper
+# Set Virtualenvwrapper configurations to be used by pyenv-virtualenvwrapper
 export WORKON_HOME=~/.virtualenvs
-export PROJECT_HOME=/home/nicholas/Documents/PhD/code
-export VIRTUALENVWRAPPER_PYTHON='/usr/bin/python3'
-source /usr/bin/virtualenvwrapper.sh
+export PROJECT_HOME=~/Documents/PhD/code
+# export VIRTUALENVWRAPPER_PYTHON='/usr/bin/python3'
+# source /usr/bin/virtualenvwrapper.sh
+# source virtualenvwrapper.sh
 
-# # Pyenv
-# export PYENV_ROOT="$HOME/.pyenv"
-# export PATH="$PYENV_ROOT/bin:$PATH"
 # Tell pyenv-virtualenvwrapper to use pyenv when creating new Python environments
+if which pyenv > /dev/null; then 
+    eval "$(pyenv init -)";
+fi
+if which pyenv-virtualenv-init > /dev/null; then 
+    eval "$(pyenv virtualenv-init -)"; 
+fi
 export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
-eval "$(pyenv init -)"
-# eval "$(pyenv virtualenv-init -)"
-
+pyenv virtualenvwrapper_lazy
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -131,20 +133,12 @@ eval "$(pyenv init -)"
 alias ls='lsd --group-dirs last '
 alias lsa='lsd --group-dirs last -a'
 alias tree='lsd --group-dirs last --tree'
-#alias ls='colorls --sf --gs -x'
-#alias lsa='colorls -la --sf --gs'
-#alias tree='colorls -l --sf --gs --tree'
 
 # Git alias commands
 alias gl='git log --graph --pretty=format:"'"%C(yellow)%h%Creset -%C(cyan)%d%Creset %s %C(green)(%cr) %C(bold blue)<%an>%Creset"'" --abbrev-commit --decorate'
 alias gs='git status -s'
 alias gls='git ls-files'
 export GIT_EDITOR=vim
-
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
