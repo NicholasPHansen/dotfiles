@@ -43,8 +43,8 @@ COMMON_PKGS=(
   "mc:midnight-commander|mc"
 )
 MAC_PKGS=(nvim:neovim fd:fd lazygit:lazygit "tree-sitter:tree-sitter-cli|tree-sitter")
-DNF_PKGS=(fd:fd-find gcc:gcc lazygit:lazygit)
-APT_PKGS=(fdfind:fd-find gcc:build-essential lazygit:lazygit)
+DNF_PKGS=(fd:fd-find gcc:gcc)
+APT_PKGS=(fdfind:fd-find gcc:build-essential)
 
 detect_pm() {
   if [[ "$OS" == "Darwin" ]]; then echo brew
@@ -84,12 +84,13 @@ ensure_homebrew() {
   [[ -x /usr/local/bin/brew ]] && eval "$(/usr/local/bin/brew shellenv)"
 }
 
-# LazyVim needs a recent Neovim; distro packages are often too old, so on
-# Linux install the official release into ~/.local.
+# LazyVim and the pinned nvim-treesitter (main branch) need Neovim >= 0.12;
+# distro packages are usually older, so on Linux install the official release
+# into ~/.local.
 install_neovim_linux() {
-  local want="0.11"
+  local want="0.12"
   if have nvim; then
-    local v; v="$(nvim --version | head -1 | grep -oE '[0-9]+\.[0-9]+' | head -1)"
+    local v; v="$(nvim --version | head -1 | grep -oE '[0-9]+\.[0-9]+(\.[0-9]+)?' | head -1)"
     if [[ "$(printf '%s\n%s\n' "$want" "$v" | sort -V | head -1)" == "$want" ]]; then
       skip "nvim $v already installed"; return
     fi
@@ -107,11 +108,25 @@ install_neovim_linux() {
   fi
 }
 
+# lazygit is not in the Debian/Ubuntu/Fedora repos, so take the release binary.
+install_lazygit_linux() {
+  if have lazygit; then skip "lazygit already installed"; return; fi
+  local a; case "$ARCH" in x86_64) a=x86_64 ;; aarch64|arm64) a=arm64 ;; *) fail "no lazygit release for $ARCH"; return ;; esac
+  local ver; ver="$(curl -fsSLI -o /dev/null -w '%{url_effective}' https://github.com/jesseduffield/lazygit/releases/latest | sed 's|.*/v||')"
+  local url="https://github.com/jesseduffield/lazygit/releases/download/v${ver}/lazygit_${ver}_Linux_${a}.tar.gz"
+  mkdir -p "$HOME/.local/bin"
+  if [[ -n "$ver" ]] && curl -fsSL "$url" | tar -xz -C "$HOME/.local/bin" lazygit; then
+    ok "installed lazygit $ver to ~/.local/bin"
+  else
+    fail "could not install lazygit ($url)"
+  fi
+}
+
 install_packages() {
   step "Installing packages ($PM)"
   if [[ "$PM" != brew ]] && ((!HAVE_SUDO)); then
     warn "no sudo — skipping system packages, installing Neovim to ~/.local only"
-    [[ "$PM" != none ]] && install_neovim_linux
+    [[ "$PM" != none ]] && { install_neovim_linux; install_lazygit_linux; }
     return
   fi
   case "$PM" in
@@ -119,9 +134,9 @@ install_packages() {
           if [[ -d /Applications/Ghostty.app ]]; then skip "Ghostty already installed"
           elif brew install --cask ghostty >/dev/null 2>&1; then ok "installed Ghostty"
           else fail "could not install Ghostty (brew install --cask ghostty)"; fi ;;
-    dnf)  for p in "${COMMON_PKGS[@]}" "${DNF_PKGS[@]}"; do install_pkg "$p"; done; install_neovim_linux ;;
+    dnf)  for p in "${COMMON_PKGS[@]}" "${DNF_PKGS[@]}"; do install_pkg "$p"; done; install_neovim_linux; install_lazygit_linux ;;
     apt)  $SUDO apt-get update -qq
-          for p in "${COMMON_PKGS[@]}" "${APT_PKGS[@]}"; do install_pkg "$p"; done; install_neovim_linux
+          for p in "${COMMON_PKGS[@]}" "${APT_PKGS[@]}"; do install_pkg "$p"; done; install_neovim_linux; install_lazygit_linux
           # Debian/Ubuntu ship fd as fdfind
           if have fdfind && ! have fd; then mkdir -p "$HOME/.local/bin"; ln -sfn "$(command -v fdfind)" "$HOME/.local/bin/fd"; ok "linked fdfind -> fd"; fi ;;
     none) fail "no supported package manager (brew, dnf, apt) — install packages manually"; return ;;
