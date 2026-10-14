@@ -115,7 +115,10 @@ install_packages() {
     return
   fi
   case "$PM" in
-    brew) ensure_homebrew || return; for p in "${COMMON_PKGS[@]}" "${MAC_PKGS[@]}"; do install_pkg "$p"; done ;;
+    brew) ensure_homebrew || return; for p in "${COMMON_PKGS[@]}" "${MAC_PKGS[@]}"; do install_pkg "$p"; done
+          if [[ -d /Applications/Ghostty.app ]]; then skip "Ghostty already installed"
+          elif brew install --cask ghostty >/dev/null 2>&1; then ok "installed Ghostty"
+          else fail "could not install Ghostty (brew install --cask ghostty)"; fi ;;
     dnf)  for p in "${COMMON_PKGS[@]}" "${DNF_PKGS[@]}"; do install_pkg "$p"; done; install_neovim_linux ;;
     apt)  $SUDO apt-get update -qq
           for p in "${COMMON_PKGS[@]}" "${APT_PKGS[@]}"; do install_pkg "$p"; done; install_neovim_linux
@@ -147,6 +150,7 @@ link_configs() {
   link tmux/tmux.conf "$HOME/.tmux.conf"
   link zsh/zshrc      "$HOME/.zshrc"
   link nvim           "$HOME/.config/nvim"
+  if [[ "$OS" == "Darwin" ]]; then link ghostty/config "$HOME/.config/ghostty/config"; fi
 }
 
 # -------------------------------------------------------------- shell/zsh ---

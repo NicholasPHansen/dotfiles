@@ -1,0 +1,12 @@
+# Ghostty (macOS) — linked to ~/.config/ghostty/config by setup.sh
+# Edit in Neovim with: ghostty +edit-config  (uses $VISUAL/$EDITOR, set to nvim in zshrc)
+# Reload with cmd+shift+, ; list themes with: ghostty +list-themes
+
+theme = Dracula
+
+# Option acts as Alt, so tmux's M-<arrow> pane bindings work
+macos-option-as-alt = true
+
+# Over SSH, install Ghostty's terminfo on the remote host and fall back to a
+# TERM it knows, so tmux/nvim behave on the workstation
+shell-integration-features = ssh-terminfo,ssh-env
