@@ -161,5 +161,13 @@ alias gs='git status -s'
 alias gls='git ls-files'
 export GIT_EDITOR=nvim
 
+# Name the tmux session after the current folder
+if [[ -n "$TMUX" ]]; then
+  precmd_tmux_rename() {
+    tmux rename-session -t "$(tmux display -p '#S')" "$(basename "$PWD")"
+  }
+  precmd_functions+=(precmd_tmux_rename)
+fi
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
